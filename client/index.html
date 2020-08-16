@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #room {
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+        border: 2px solid #2b1640;
+        padding: 5px;
+        border-radius: 4px;
+        height: 600px;
+        overflow: auto;
+      }
+      .left {
+        align-self: flex-start;
+      }
+      .right {
+        align-self: flex-end;
+        text-align: right;
+      }
+      #room span {
+        font-size: 14px;
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>您与炸鸡聊天的聊天室</h2>
+    <div id="room"></div>
+    <div class="send">
+      <input class="text-box" onkeypress="sendMsg(event)" type="text" />
+      <button onclick="sendMsg()">发送</button>
+    </div>
+
+    <script src="./index.js"></script>
+    <script>
+      const room = document.querySelector("#room");
+      const textBox = document.querySelector(".text-box");
+
+      function sendMsg(event) {
+        if (event && event.keyCode !== 13) {
+          return;
+        }
+        const msg = textBox.value;
+        ws.send(msg);
+        appendMsg(msg, "right");
+        textBox.value = "";
+      }
+      function appendMsg(msg, sending) {
+        const oneMsg = document.createElement("p");
+        oneMsg.setAttribute("class", sending ? "right" : "left");
+
+        oneMsg.innerHTML = `<span class='time'>${new Date().toLocaleString()}</span><br>${msg}`;
+        room.appendChild(oneMsg);
+        room.scrollTo({
+          top: room.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+    </script>
+  </body>
+</html>
